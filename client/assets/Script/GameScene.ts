@@ -1,3 +1,4 @@
+import GameNet from "./GameNet";
 import GameCtrl from "./GameCtrl";
 
 const { ccclass, property } = cc._decorator;
@@ -19,9 +20,15 @@ export default class GameScene extends cc.Component {
     start() {
         // init logic
         this.label.string = '这是游戏场景';
-
         this.m_gameCtrl = new GameCtrl();
         this.m_gameCtrl.Init(this.pokerContainer, this.pokerPrefab);
-        this.m_gameCtrl.Start();
+
+        GameNet.getInstance().init(this.PlayGame, this);
+    }
+
+    private PlayGame(data: string) {
+        let nowPlayerPokers: [] = JSON.parse(data);
+        console.log(nowPlayerPokers);
+        this.m_gameCtrl.ShowUIPoker(nowPlayerPokers);
     }
 }

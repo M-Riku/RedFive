@@ -72,7 +72,7 @@ export default class GameCtrl {
         otherPlayerPokers.forEach(playerPokers => {
             let otherPlayedPoker = playerPokers.playedPokers;
             otherPlayedPoker.forEach((poker, index) => {
-                let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, 0);
+                let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, 200);
                 this.pokerContainer.addChild(uiPoker.node);
             })
         });

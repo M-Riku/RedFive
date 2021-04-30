@@ -6,14 +6,17 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class GameScene extends cc.Component {
 
-    @property(cc.Label)
-    label: cc.Label = null;
-
     @property(cc.Node)
     pokerContainer = null;
 
     @property(cc.Prefab)
     pokerPrefab: cc.Prefab = null;
+
+    @property(cc.EditBox)
+    playerIdEditBox: cc.EditBox = null;
+
+    @property(cc.Button)
+    startGameBtn: cc.Button = null;
 
     @property(cc.Button)
     playPokersBtn: cc.Button = null;
@@ -23,15 +26,28 @@ export default class GameScene extends cc.Component {
 
     private m_gameCtrl: GameCtrl = null;
 
-    public curPlayer: string = '露露';
+    public curPlayer: string = null;
 
     start() {
-        this.label.string = '这是游戏场景';
+        this.startGameBtn.node.on('click', this.StartGame.bind(this));
+        this.playPokersBtn.node.active = false;
+        this.regretPokersBtn.node.active = false;
+
         this.m_gameCtrl = new GameCtrl();
+    }
+
+    private StartGame() {
+        this.curPlayer = this.playerIdEditBox.string;
         this.m_gameCtrl.Init(this.pokerContainer, this.pokerPrefab,
             this.playPokersBtn, this.regretPokersBtn, this.curPlayer);
 
         GameNet.getInstance().init(this.PlayGame, this);
+
+        this.playerIdEditBox.node.active = false;
+        this.startGameBtn.node.active = false;
+
+        this.playPokersBtn.node.active = true;
+        this.regretPokersBtn.node.active = true;
     }
 
     private PlayGame(data: string) {

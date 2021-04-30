@@ -24,6 +24,34 @@ exports.setMain = (req, res, next) => {
     res.send();
 }
 
+exports.playCards = (req, res, next) => {
+    console.log('play cards');
+    playerId = req.params.playerId;
+    let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
+    playerPoker.playedPokers = [];
+    console.log(req.body);
+    req.body.forEach(poker => {
+        playerPoker.playedPokers.push(poker);
+        // TODO: pop only one
+        playerPoker.pokers = playerPoker.pokers.filter(ppoker => ppoker.point !== poker.point || ppoker.suit !== poker.suit);
+    })
+    req.sendFlag.push(1);
+    res.send();
+}
+
+exports.regretCards = (req, res, next) => {
+    console.log('regret cards');
+    playerId = req.params.playerId;
+    let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
+    console.log(playerPoker.playedPokers);
+    playerPoker.playedPokers.forEach(poker => {
+        playerPoker.pokers.push(poker);
+    })
+    playerPoker.playedPokers = [];
+    req.sendFlag.push(1);
+    res.send();
+}
+
 shufflePokers = (deckNumber, curMainPoint) => {
     pokers = [];
     for (deck = 0; deck < deckNumber; deck++) {
@@ -53,6 +81,7 @@ dealPokersRedFive = (players, pokers) => {
     players.forEach((player, index) => {
         playerPoker = {};
         playerPoker.playerId = player;
+        playerPoker.playedPokers = [];
         playerPoker.pokers = pokers.slice(index * 31, (index + 1) * 31);
         sortPokers(playerPoker.pokers);
         playerPokers.push(playerPoker);

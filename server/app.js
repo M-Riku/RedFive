@@ -1,5 +1,8 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
+app.use(cors());
+app.use(express.json());
 const WebSocketServer = require("ws").Server;
 
 const gameAdminRoutes = require('./routes/gameAdmin');
@@ -9,7 +12,7 @@ const wss = new WebSocketServer({ server: server, path: "/wsgame" });
 
 sendFlag = [];
 players = require('./models/Players');
-playerPokers = [{ pokers: [] }];
+playerPokers = [{ playerId: '', pokers: [], playedPokers: [] }];
 const handlerPokers = (req, res, next) => {
     req.players = players;
     req.sendFlag = sendFlag;

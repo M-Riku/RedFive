@@ -34,12 +34,17 @@ export default class UIPoker extends cc.Component {
     @property(cc.SpriteFrame) bigSuits: cc.SpriteFrame[] = [];
     @property(cc.SpriteFrame) smallSuits: cc.SpriteFrame[] = [];
     @property(cc.SpriteFrame) texFaces: cc.SpriteFrame[] = [];
-
+    @property(cc.Button) selectBtn: cc.Button = null;
 
     private redTextColor: cc.Color = cc.color(183, 24, 40);
     private blackTextColor: cc.Color = cc.Color.BLACK;
 
-    public Init(poker: Poker) {
+    public poker: Poker = null;
+    public playPokers: Poker[] = [];
+
+    public Init(poker: Poker, playPokers: Poker[]) {
+        this.poker = poker;
+        this.playPokers = playPokers;
         this.pointLabel.string = `${POINT_MAP[poker.point]}`;
         this.pointLabel.node.color = (poker.suit == ESuit.HeiTao || poker.suit == ESuit.MeiHua) ? this.blackTextColor : this.redTextColor;
         if (poker.point >= 11) {
@@ -48,5 +53,14 @@ export default class UIPoker extends cc.Component {
             this.bigSuitSprite.spriteFrame = this.bigSuits[poker.suit];
         }
         this.smallSuitSprite.spriteFrame = this.smallSuits[poker.suit];
+        this.selectBtn.node.on("click", this.OnSelectBtnClick.bind(this));
+    }
+
+    private OnSelectBtnClick() {
+        let x: number = this.node.getPosition().x;
+        let y: number = this.node.getPosition().y;
+        y = y === -200 ? y + 20 : y - 20;
+        this.node.setPosition(x, y);
+        this.playPokers.push(this.poker);
     }
 }

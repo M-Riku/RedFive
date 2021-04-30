@@ -8,4 +8,8 @@ router.use('/create-game/:mainPoint', gameAdminController.createGame);
 
 router.use('/set-main/:mainSuit', gameAdminController.setMain);
 
+router.use('/play-cards/:playerId', gameAdminController.playCards);
+
+router.use('/regret-cards/:playerId', gameAdminController.regretCards);
+
 module.exports = router;

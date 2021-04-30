@@ -45,6 +45,8 @@ export default class GameScene extends cc.Component {
 
     public curPlayer: string = null;
 
+    public otherPlayer: string[] = [];
+
     start() {
         this.startGameBtn.node.on('click', this.StartGame.bind(this));
         this.playPokersBtn.node.active = false;
@@ -78,8 +80,8 @@ export default class GameScene extends cc.Component {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", `http://localhost:3000/game/list-other-players/${this.curPlayer}`, true);
         xhr.onload = () => {
-            let otherPlayers: [] = JSON.parse(xhr.responseText);
-            otherPlayers.forEach((player, index) => {
+            this.otherPlayer = JSON.parse(xhr.responseText);
+            this.otherPlayer.forEach((player, index) => {
                 this.otherPlayerLable[index].string = player;
             })
         };
@@ -89,8 +91,12 @@ export default class GameScene extends cc.Component {
     private PlayGame(data: string) {
         let playerPokers = JSON.parse(data);
         let myPokers = playerPokers.find(playerPoker => playerPoker.playerId === this.curPlayer).pokers;
-        let myPlayedPokers = playerPokers.find(playerPoker => playerPoker.playerId === this.curPlayer).playedPokers;
-        let otherPlayedPokers = playerPokers.filter(playerPoker => playerPoker.playerId !== this.curPlayer && playerPoker.playerId !== "庄家");
-        this.m_gameCtrl.ShowUIPoker(myPokers, myPlayedPokers, otherPlayedPokers);
+        let myPlayedPokers = playerPokers.find(
+            playerPoker => playerPoker.playerId === this.curPlayer
+        ).playedPokers;
+        let otherPlayedPokers = playerPokers.filter(
+            playerPoker => playerPoker.playerId !== this.curPlayer && playerPoker.playerId !== "庄家"
+        );
+        this.m_gameCtrl.ShowUIPoker(myPokers, myPlayedPokers, otherPlayedPokers, this.otherPlayer);
     }
 }

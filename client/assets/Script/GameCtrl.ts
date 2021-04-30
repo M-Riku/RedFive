@@ -1,3 +1,4 @@
+import PlayerPostion from "./PlayerPostion";
 import Poker from "./Poker";
 import UIPoker from "./UIPoker";
 
@@ -53,29 +54,36 @@ export default class GameCtrl {
         return uiPoker
     }
 
-    public ShowUIPoker(curPokers: any, myPlayedPokers: any, otherPlayerPokers: any) {
+    public ShowUIPoker(curPokers: any, myPlayedPokers: any, otherPlayerPokers: any, otherPlayer: any) {
+
         this.pokerContainer.destroyAllChildren();
         this.SortPokers(curPokers);
         let startX: number = -Math.floor(curPokers.length / 2) * 25;
+        let startY: number = -225;
         curPokers.forEach((poker, index) => {
-            let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, -225);
+            let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, startY);
             this.pokerContainer.addChild(uiPoker.node);
         });
 
         this.SortPokers(myPlayedPokers);
         startX = -Math.floor(myPlayedPokers.length / 2) * 25;
+        startY = -50;
         myPlayedPokers.forEach((poker, index) => {
             let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, -50);
             this.pokerContainer.addChild(uiPoker.node);
         })
 
-        otherPlayerPokers.forEach(playerPokers => {
-            let otherPlayedPoker = playerPokers.playedPokers;
-            otherPlayedPoker.forEach((poker, index) => {
-                let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, 200);
+        otherPlayer.forEach((player, index) => {
+            let otherPlayedPoker = otherPlayerPokers.find(
+                playerPoker => playerPoker.playerId === player
+            ).playedPokers
+            startX = PlayerPostion[index].x - Math.floor(otherPlayedPoker.length / 2) * 25;;
+            startY = PlayerPostion[index].y;
+            otherPlayedPoker.forEach((poker, indexP) => {
+                let uiPoker = this.CreateUIPoker(poker, startX + 25 * indexP, startY);
                 this.pokerContainer.addChild(uiPoker.node);
             })
-        });
+        })
     }
 
     private SortPokers(pokers: Poker[]) {

@@ -24,6 +24,23 @@ export default class GameScene extends cc.Component {
     @property(cc.Button)
     regretPokersBtn: cc.Button = null;
 
+    @property(cc.Label)
+    curPlayerLable: cc.Label = null;
+
+    @property(cc.Label)
+    playerIdNext1Lable: cc.Label = null;
+
+    @property(cc.Label)
+    playerIdNext2Lable: cc.Label = null;
+
+    @property(cc.Label)
+    playerIdNext3Lable: cc.Label = null;
+
+    @property(cc.Label)
+    playerIdNext4Lable: cc.Label = null;
+
+    private otherPlayerLable: cc.Label[] = [];
+
     private m_gameCtrl: GameCtrl = null;
 
     public curPlayer: string = null;
@@ -33,11 +50,18 @@ export default class GameScene extends cc.Component {
         this.playPokersBtn.node.active = false;
         this.regretPokersBtn.node.active = false;
 
+        this.otherPlayerLable.push(this.playerIdNext1Lable);
+        this.otherPlayerLable.push(this.playerIdNext2Lable);
+        this.otherPlayerLable.push(this.playerIdNext3Lable);
+        this.otherPlayerLable.push(this.playerIdNext4Lable);
+
         this.m_gameCtrl = new GameCtrl();
     }
 
     private StartGame() {
         this.curPlayer = this.playerIdEditBox.string;
+        this.curPlayerLable.string = this.curPlayer;
+        this.showOtherPlayersName()
         this.m_gameCtrl.Init(this.pokerContainer, this.pokerPrefab,
             this.playPokersBtn, this.regretPokersBtn, this.curPlayer);
 
@@ -48,6 +72,18 @@ export default class GameScene extends cc.Component {
 
         this.playPokersBtn.node.active = true;
         this.regretPokersBtn.node.active = true;
+    }
+
+    private showOtherPlayersName() {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", `http://localhost:3000/game/list-other-players/${this.curPlayer}`, true);
+        xhr.onload = () => {
+            let otherPlayers: [] = JSON.parse(xhr.responseText);
+            otherPlayers.forEach((player, index) => {
+                this.otherPlayerLable[index].string = player;
+            })
+        };
+        xhr.send();
     }
 
     private PlayGame(data: string) {

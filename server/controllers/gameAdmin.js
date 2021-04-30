@@ -2,6 +2,22 @@ const Poker = require('../models/Poker');
 const ESuit = require('../models/ESuit');
 
 
+exports.listOtherPlayer = (req, res, next) => {
+    otherPlayers = [];
+    curPlayerId = req.params.playerId;
+    curPlayerIndex = -1
+    req.playerPokers.forEach((playerPoker, index) => {
+        if (playerPoker.playerId !== '庄家') {
+            otherPlayers.push(playerPoker.playerId)
+        }
+        if (playerPoker.playerId === curPlayerId) {
+            curPlayerIndex = index
+        }
+    })
+    otherPlayers = otherPlayers.slice(curPlayerIndex + 1, 5).concat(otherPlayers.slice(0, curPlayerIndex));
+    res.send(JSON.stringify(otherPlayers));
+}
+
 exports.createGame = (req, res, next) => {
     console.log('create game');
     curMainPoint = Number(req.params.mainPoint);

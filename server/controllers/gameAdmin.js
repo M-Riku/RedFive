@@ -25,13 +25,15 @@ exports.setMain = (req, res, next) => {
 
 exports.playCards = (req, res, next) => {
     console.log('play cards');
-    playerId = req.params.playerId;
-    let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
-    playerPoker.playedPokers = [];
-    req.body.forEach(poker => {
-        playerPoker.playedPokers.push(poker);
-        playerPoker.pokers = playerPoker.pokers.filter(ppoker => ppoker.pokerId !== poker.pokerId);
-    })
+    if (req.body.length !== 0) {
+        playerId = req.params.playerId;
+        let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
+        playerPoker.playedPokers = [];
+        req.body.forEach(poker => {
+            playerPoker.playedPokers.push(poker);
+            playerPoker.pokers = playerPoker.pokers.filter(ppoker => ppoker.pokerId !== poker.pokerId);
+        })
+    }
     req.sendFlag.push(1);
     res.send();
 }

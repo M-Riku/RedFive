@@ -34,7 +34,7 @@ export default class GameScene extends cc.Component {
     }
 
     private PlayGame(data: string) {
-        let nowPlayerPokers: [] = JSON.parse(data);
-        this.m_gameCtrl.ShowUIPoker(nowPlayerPokers);
+        let playerPokers: {} = JSON.parse(data);
+        this.m_gameCtrl.ShowUIPoker(playerPokers);
     }
 }

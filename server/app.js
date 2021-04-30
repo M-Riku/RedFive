@@ -26,7 +26,7 @@ wss.on("connection", () => {
     console.log('client connect to server!');
     wss.clients.forEach((client) => {
         client.send(
-            JSON.stringify(playerPokers[0].pokers)
+            JSON.stringify(playerPokers[0])
         );
     });
 });
@@ -35,7 +35,7 @@ setInterval(() => {
     if (sendFlag.length) {
         wss.clients.forEach((client) => {
             client.send(
-                JSON.stringify(playerPokers[0].pokers)
+                JSON.stringify(playerPokers[0])
             );
         });
         sendFlag = [];

@@ -40,9 +40,9 @@ export default class UIPoker extends cc.Component {
     private blackTextColor: cc.Color = cc.Color.BLACK;
 
     public poker: Poker = null;
-    public playPokers: Poker[] = [];
+    public playPokers: { pokers: Poker[] } = { pokers: [] };
 
-    public Init(poker: Poker, playPokers: Poker[]) {
+    public Init(poker: Poker, playPokers: { pokers: Poker[] }) {
         this.poker = poker;
         this.playPokers = playPokers;
         this.pointLabel.string = `${POINT_MAP[poker.point]}`;
@@ -61,10 +61,10 @@ export default class UIPoker extends cc.Component {
         let y: number = this.node.getPosition().y;
         if (y === -200) {
             y += 20
-            this.playPokers.push(this.poker);
+            this.playPokers.pokers.push(this.poker);
         } else {
             y -= 20
-            this.playPokers = this.playPokers.filter(poker => poker.pokerId !== this.poker.pokerId)
+            this.playPokers.pokers = this.playPokers.pokers.filter(poker => poker.pokerId !== this.poker.pokerId);
         }
         console.log(this.playPokers);
         this.node.setPosition(x, y);

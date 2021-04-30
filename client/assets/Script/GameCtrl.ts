@@ -75,6 +75,8 @@ export default class GameCtrl {
             this.setHolePokersBtn.node.active = false;
         }
 
+        this.playPokers.pokers = [];
+
         this.pokerContainer.destroyAllChildren();
         this.SortPokers(curPokers);
         let startX: number = -Math.floor(curPokers.length / 2) * 30;

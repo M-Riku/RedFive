@@ -14,4 +14,8 @@ router.use('/play-cards/:playerId', gameAdminController.playCards);
 
 router.use('/regret-cards/:playerId', gameAdminController.regretCards);
 
+router.get('/get-hole-pokers/:playerId', gameAdminController.getHolePokers);
+
+router.post('/set-hole-pokers/:playerId', gameAdminController.setHolePokers)
+
 module.exports = router;

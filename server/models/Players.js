@@ -1,9 +1,9 @@
 players = [
-    "露露",
-    "哔芯",
-    "源源",
-    "王老师",
-    "安杰"
+    "lulu",
+    "bixin",
+    "yuanyuan",
+    "wang",
+    "anjie"
 ];
 
 function shuffle(array) {

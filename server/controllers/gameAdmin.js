@@ -40,7 +40,6 @@ exports.setMain = (req, res, next) => {
 }
 
 exports.playCards = (req, res, next) => {
-    console.log('play cards');
     if (req.body.length !== 0) {
         playerId = req.params.playerId;
         let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
@@ -55,13 +54,36 @@ exports.playCards = (req, res, next) => {
 }
 
 exports.regretCards = (req, res, next) => {
-    console.log('regret cards');
     playerId = req.params.playerId;
     let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
     playerPoker.playedPokers.forEach(poker => {
         playerPoker.pokers.push(poker);
     })
     playerPoker.playedPokers = [];
+    req.sendFlag.push(1);
+    res.send();
+}
+
+exports.getHolePokers = (req, res, next) => {
+    playerId = req.params.playerId;
+    let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
+    let holePokers = req.playerPokers.find(playerPoker => playerPoker.playerId === "庄家").pokers;
+    let length = holePokers.length;
+    for (i = 0; i < length; i++) {
+        playerPoker.pokers.push(holePokers.pop());
+    }
+    req.sendFlag.push(1);
+    res.send();
+}
+
+exports.setHolePokers = (req, res, next) => {
+    playerId = req.params.playerId;
+    let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
+    let hole = req.playerPokers.find(playerPoker => playerPoker.playerId === "庄家");
+    req.body.forEach(poker => {
+        hole.pokers.push(poker);
+        playerPoker.pokers = playerPoker.pokers.filter(ppoker => ppoker.pokerId !== poker.pokerId);
+    })
     req.sendFlag.push(1);
     res.send();
 }

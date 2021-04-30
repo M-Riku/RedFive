@@ -13,18 +13,22 @@ export default class GameCtrl {
 
     private regretPokersBtn: cc.Button = null;
 
+    private setHolePokersBtn: cc.Button = null;
+
     public curPlayer: string = null;
 
     public playPokers: { pokers: Poker[] } = { pokers: [] };
 
-    public Init(pockerContainer: cc.Node, pokerPrefab: cc.Prefab,
+    public Init(pockerContainer: cc.Node, pokerPrefab: cc.Prefab, setHolePokersBtn: cc.Button,
         playPokersBtn: cc.Button, regretPokersBtn: cc.Button, curPlayer: string) {
         this.pokerContainer = pockerContainer;
         this.pokerPrefab = pokerPrefab;
         this.playPokersBtn = playPokersBtn;
         this.regretPokersBtn = regretPokersBtn;
+        this.setHolePokersBtn = setHolePokersBtn;
         this.playPokersBtn.node.on('click', this.OnPlayPokersBtnClick.bind(this));
         this.regretPokersBtn.node.on('click', this.OnRegretPokersBtnClick.bind(this));
+        this.setHolePokersBtn.node.on('click', this.OnSetHolePokersBtnClick.bind(this));
         this.curPlayer = curPlayer;
     }
 
@@ -32,10 +36,10 @@ export default class GameCtrl {
         console.log('play pokers');
         let xhr = new XMLHttpRequest();
         let data = JSON.stringify(this.playPokers.pokers);
-        this.playPokers.pokers = [];
         xhr.open("POST", `http://localhost:3000/game/play-cards/${this.curPlayer}`, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(data);
+        this.playPokers.pokers = [];
     }
 
     private OnRegretPokersBtnClick() {
@@ -44,6 +48,16 @@ export default class GameCtrl {
         xhr.open("POST", `http://localhost:3000/game/regret-cards/${this.curPlayer}`, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send();
+    }
+
+    private OnSetHolePokersBtnClick() {
+        console.log('set hole pokers');
+        let xhr = new XMLHttpRequest();
+        let data = JSON.stringify(this.playPokers.pokers);
+        xhr.open("POST", `http://localhost:3000/game/set-hole-pokers/${this.curPlayer}`, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(data);
+        this.playPokers.pokers = [];
     }
 
     private CreateUIPoker(poker: Poker, x: number, y: number): UIPoker {
@@ -55,6 +69,11 @@ export default class GameCtrl {
     }
 
     public ShowUIPoker(curPokers: any, myPlayedPokers: any, otherPlayerPokers: any, otherPlayer: any) {
+        if (curPokers.length > 31) {
+            this.setHolePokersBtn.node.active = true;
+        } else {
+            this.setHolePokersBtn.node.active = false;
+        }
 
         this.pokerContainer.destroyAllChildren();
         this.SortPokers(curPokers);

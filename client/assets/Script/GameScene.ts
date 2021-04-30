@@ -24,6 +24,9 @@ export default class GameScene extends cc.Component {
     @property(cc.Button)
     regretPokersBtn: cc.Button = null;
 
+    @property(cc.Button)
+    setHolePokersBtn: cc.Button = null;
+
     @property(cc.Label)
     curPlayerLable: cc.Label = null;
 
@@ -51,6 +54,7 @@ export default class GameScene extends cc.Component {
         this.startGameBtn.node.on('click', this.StartGame.bind(this));
         this.playPokersBtn.node.active = false;
         this.regretPokersBtn.node.active = false;
+        this.setHolePokersBtn.node.active = false;
 
         this.otherPlayerLable.push(this.playerIdNext1Lable);
         this.otherPlayerLable.push(this.playerIdNext2Lable);
@@ -64,7 +68,7 @@ export default class GameScene extends cc.Component {
         this.curPlayer = this.playerIdEditBox.string;
         this.curPlayerLable.string = this.curPlayer;
         this.showOtherPlayersName()
-        this.m_gameCtrl.Init(this.pokerContainer, this.pokerPrefab,
+        this.m_gameCtrl.Init(this.pokerContainer, this.pokerPrefab, this.setHolePokersBtn,
             this.playPokersBtn, this.regretPokersBtn, this.curPlayer);
 
         GameNet.getInstance().init(this.PlayGame, this);

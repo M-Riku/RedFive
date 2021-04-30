@@ -91,6 +91,7 @@ export default class GameCtrl {
         startY = -100;
         myPlayedPokers.forEach((poker, index) => {
             let uiPoker = this.CreateUIPoker(poker, startX + 30 * index, startY);
+            uiPoker.selectBtn.node.active = false;
             this.pokerContainer.addChild(uiPoker.node);
         })
 
@@ -102,6 +103,7 @@ export default class GameCtrl {
             startY = PlayerPostion[index].y;
             otherPlayedPoker.forEach((poker, indexP) => {
                 let uiPoker = this.CreateUIPoker(poker, startX + 30 * indexP, startY);
+                uiPoker.selectBtn.node.active = false;
                 this.pokerContainer.addChild(uiPoker.node);
             })
         })

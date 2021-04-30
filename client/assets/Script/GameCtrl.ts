@@ -77,18 +77,18 @@ export default class GameCtrl {
 
         this.pokerContainer.destroyAllChildren();
         this.SortPokers(curPokers);
-        let startX: number = -Math.floor(curPokers.length / 2) * 25;
-        let startY: number = -225;
+        let startX: number = -Math.floor(curPokers.length / 2) * 30;
+        let startY: number = -250;
         curPokers.forEach((poker, index) => {
-            let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, startY);
+            let uiPoker = this.CreateUIPoker(poker, startX + 30 * index, startY);
             this.pokerContainer.addChild(uiPoker.node);
         });
 
         this.SortPokers(myPlayedPokers);
-        startX = -Math.floor(myPlayedPokers.length / 2) * 25;
-        startY = -50;
+        startX = -Math.floor(myPlayedPokers.length / 2) * 30;
+        startY = -100;
         myPlayedPokers.forEach((poker, index) => {
-            let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, -50);
+            let uiPoker = this.CreateUIPoker(poker, startX + 30 * index, startY);
             this.pokerContainer.addChild(uiPoker.node);
         })
 
@@ -96,10 +96,10 @@ export default class GameCtrl {
             let otherPlayedPoker = otherPlayerPokers.find(
                 playerPoker => playerPoker.playerId === player
             ).playedPokers
-            startX = PlayerPostion[index].x - Math.floor(otherPlayedPoker.length / 2) * 25;;
+            startX = PlayerPostion[index].x - Math.floor(otherPlayedPoker.length / 2) * 30;;
             startY = PlayerPostion[index].y;
             otherPlayedPoker.forEach((poker, indexP) => {
-                let uiPoker = this.CreateUIPoker(poker, startX + 25 * indexP, startY);
+                let uiPoker = this.CreateUIPoker(poker, startX + 30 * indexP, startY);
                 this.pokerContainer.addChild(uiPoker.node);
             })
         })

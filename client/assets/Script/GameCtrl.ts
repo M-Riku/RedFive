@@ -12,16 +12,19 @@ export default class GameCtrl {
 
     private regretPokersBtn: cc.Button = null;
 
+    public curPlayer: string = null;
+
     public playPokers: { pokers: Poker[] } = { pokers: [] };
 
     public Init(pockerContainer: cc.Node, pokerPrefab: cc.Prefab,
-        playPokersBtn: cc.Button, regretPokersBtn: cc.Button) {
+        playPokersBtn: cc.Button, regretPokersBtn: cc.Button, curPlayer: string) {
         this.pokerContainer = pockerContainer;
         this.pokerPrefab = pokerPrefab;
         this.playPokersBtn = playPokersBtn;
         this.regretPokersBtn = regretPokersBtn;
         this.playPokersBtn.node.on('click', this.OnPlayPokersBtnClick.bind(this));
         this.regretPokersBtn.node.on('click', this.OnRegretPokersBtnClick.bind(this));
+        this.curPlayer = curPlayer;
     }
 
     private OnPlayPokersBtnClick() {
@@ -29,7 +32,7 @@ export default class GameCtrl {
         let xhr = new XMLHttpRequest();
         let data = JSON.stringify(this.playPokers.pokers);
         this.playPokers.pokers = [];
-        xhr.open("POST", 'http://localhost:3000/game/play-cards/露露', true); //playerid
+        xhr.open("POST", `http://localhost:3000/game/play-cards/${this.curPlayer}`, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(data);
     }
@@ -37,7 +40,7 @@ export default class GameCtrl {
     private OnRegretPokersBtnClick() {
         console.log('regret pokers');
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", 'http://localhost:3000/game/regret-cards/露露', true); //playerid
+        xhr.open("POST", `http://localhost:3000/game/regret-cards/${this.curPlayer}`, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send();
     }
@@ -50,21 +53,29 @@ export default class GameCtrl {
         return uiPoker
     }
 
-    public ShowUIPoker(playerPokers: any) {
+    public ShowUIPoker(curPokers: any, myPlayedPokers: any, otherPlayerPokers: any) {
         this.pokerContainer.destroyAllChildren();
-        this.SortPokers(playerPokers.pokers);
-        let startX: number = -Math.floor(playerPokers.pokers.length / 2) * 25;
-        playerPokers.pokers.forEach((poker, index) => {
-            let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, -200);
+        this.SortPokers(curPokers);
+        let startX: number = -Math.floor(curPokers.length / 2) * 25;
+        curPokers.forEach((poker, index) => {
+            let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, -225);
             this.pokerContainer.addChild(uiPoker.node);
         });
 
-        this.SortPokers(playerPokers.playedPokers);
-        startX = -Math.floor(playerPokers.playedPokers.length / 2) * 25;
-        playerPokers.playedPokers.forEach((poker, index) => {
+        this.SortPokers(myPlayedPokers);
+        startX = -Math.floor(myPlayedPokers.length / 2) * 25;
+        myPlayedPokers.forEach((poker, index) => {
             let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, -50);
             this.pokerContainer.addChild(uiPoker.node);
         })
+
+        otherPlayerPokers.forEach(playerPokers => {
+            let otherPlayedPoker = playerPokers.playedPokers;
+            otherPlayedPoker.forEach((poker, index) => {
+                let uiPoker = this.CreateUIPoker(poker, startX + 25 * index, 0);
+                this.pokerContainer.addChild(uiPoker.node);
+            })
+        });
     }
 
     private SortPokers(pokers: Poker[]) {

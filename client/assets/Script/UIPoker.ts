@@ -59,7 +59,7 @@ export default class UIPoker extends cc.Component {
     private OnSelectBtnClick() {
         let x: number = this.node.getPosition().x;
         let y: number = this.node.getPosition().y;
-        if (y === -225) {
+        if (y === -250) {
             y += 20
             this.playPokers.pokers.push(this.poker);
         } else {

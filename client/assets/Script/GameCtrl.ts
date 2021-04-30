@@ -28,6 +28,7 @@ export default class GameCtrl {
         console.log('play pokers');
         let xhr = new XMLHttpRequest();
         let data = JSON.stringify(this.playPokers);
+        this.playPokers = [];
         xhr.open("POST", 'http://localhost:3000/game/play-cards/露露', true); //playerid
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(data);
@@ -51,9 +52,15 @@ export default class GameCtrl {
 
     public ShowUIPoker(pokers: []) {
         this.pokerContainer.destroyAllChildren();
+        this.SortPokers(pokers);
         pokers.forEach((poker, index) => {
             let uiPoker = this.CreateUIPoker(poker, -375 + 25 * index, -200);
             this.pokerContainer.addChild(uiPoker.node);
         });
+    }
+
+    private SortPokers(pokers: Poker[]) {
+        pokers.sort((a, b) => (a.mainPoint > b.mainPoint) ? 1 : -1)
+        pokers.sort((a, b) => (a.mainSuit < b.mainSuit) ? 1 : -1)
     }
 }

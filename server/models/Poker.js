@@ -1,5 +1,6 @@
 class Poker {
-    constructor(point, suit, mainPoint = null, mainSuit = null) {
+    constructor(pokerId, point, suit, mainPoint = null, mainSuit = null) {
+        this.pokerId = pokerId;
         this.point = point;
         this.suit = suit;
         if (mainPoint) {

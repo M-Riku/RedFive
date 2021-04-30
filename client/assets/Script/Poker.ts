@@ -1,12 +1,14 @@
 import { ESuit } from "./ConfigEnum";
 
 export default class Poker {
+    public pokerId: number = null
     public point: number = null;
     public suit: ESuit = null;
     public mainPoint: number = null;
     public mainSuit: ESuit = null;
 
-    constructor(point: number, suit: ESuit, mainPoint?: number, mainSuit?: ESuit) {
+    constructor(pokerId: number, point: number, suit: ESuit, mainPoint?: number, mainSuit?: ESuit) {
+        this.pokerId = pokerId;
         this.point = point;
         this.suit = suit;
 

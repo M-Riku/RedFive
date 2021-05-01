@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+    client:
+        image: nginx:1.17.5
+        ports:
+            - 8080:80
+        volumes:
+            - ./client/build/web-desktop:/usr/share/nginx/html
+        restart:
+            always
+        command:
+            ["nginx", "-g", "daemon off;"]
+
+    client-mobile:
+        image: nginx:1.17.5
+        ports:
+            - 8081:80
+        volumes:
+            - ./client/build/web-mobile:/usr/share/nginx/html
+        restart:
+            always
+        command:
+            ["nginx", "-g", "daemon off;"]
+
+    server:
+        build:
+            context: ./server
+        ports: 
+            - 3000:3000
+        volumes:
+            - ./server:/app
+        restart: always
+        command:
+            [npm, start]
+
+    reverse-proxy:
+        image: nginx:stable-alpine
+        ports:
+            - 80:80
+        volumes:
+            - ./default.conf:/etc/nginx/conf.d/default.conf
+        restart:
+            always
+        depends_on: 
+            - client
+            - client-mobile
+            - server

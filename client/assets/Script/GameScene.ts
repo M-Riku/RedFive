@@ -82,7 +82,7 @@ export default class GameScene extends cc.Component {
 
     private showOtherPlayersName() {
         let xhr = new XMLHttpRequest();
-        xhr.open("GET", `http://localhost:3000/game/list-other-players/${this.curPlayer}`, true);
+        xhr.open("GET", `/game/list-other-players/${this.curPlayer}`, true);
         xhr.onload = () => {
             this.otherPlayer = JSON.parse(xhr.responseText);
             this.otherPlayer.forEach((player, index) => {

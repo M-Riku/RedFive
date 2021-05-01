@@ -1,0 +1,1 @@
+window._CCSettings={platform:"web-mobile",groupList:["default"],collisionMatrix:[[true]],hasResourcesBundle:false,hasStartSceneBundle:false,remoteBundles:[],subpackages:[],launchScene:"db://assets/Scene/SplashScene.fire",orientation:"landscape",jsList:[],bundleVers:{internal:"803f8",main:"7b8d2"}};

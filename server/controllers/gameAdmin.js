@@ -82,11 +82,13 @@ exports.setHolePokers = (req, res, next) => {
     playerId = req.params.playerId;
     let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
     let hole = req.playerPokers.find(playerPoker => playerPoker.playerId === "庄家");
-    req.body.forEach(poker => {
-        hole.pokers.push(poker);
-        playerPoker.pokers = playerPoker.pokers.filter(ppoker => ppoker.pokerId !== poker.pokerId);
-    })
-    req.sendFlag.push(1);
+    if ((hole.pokers.length + req.body.length) <= 7) {
+        req.body.forEach(poker => {
+            hole.pokers.push(poker);
+            playerPoker.pokers = playerPoker.pokers.filter(ppoker => ppoker.pokerId !== poker.pokerId);
+        })
+        req.sendFlag.push(1);
+    }
     res.send();
 }
 
@@ -134,8 +136,8 @@ setPokerMain = (poker, curMainPoint, curMainSuit) => {
     if (curMainSuit !== undefined) {
         if (poker.suit === curMainSuit) {
             poker.mainSuit = ESuit.Joker;
-            if (poker.point === 70) {
-                poker.mainPoint++;
+            if (poker.mainPoint === 70) {
+                poker.mainPoint = 71;
             }
             if (poker.point === 3) {
                 poker.mainPoint = 81;

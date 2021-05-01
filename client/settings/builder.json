@@ -9,7 +9,7 @@
   "packageName": "org.cocos2d.helloworld",
   "startScene": "2d2f792f-a40c-49bb-a189-ed176a246e49",
   "title": "RedFive",
-  "webOrientation": "landscape",
+  "webOrientation": "auto",
   "inlineSpriteFrames": true,
   "inlineSpriteFrames_native": true,
   "mainCompressionType": "default",
@@ -17,8 +17,8 @@
   "optimizeHotUpdate": false,
   "md5Cache": true,
   "nativeMd5Cache": true,
-  "encryptJs": false,
-  "xxteaKey": "82029942-0e5d-4e",
+  "encryptJs": true,
+  "xxteaKey": "05a1c95c-28f0-4b",
   "zipCompressJs": true,
   "fb-instant-games": {},
   "android": {
@@ -51,6 +51,5 @@
     "recordPath": ""
   },
   "appBundle": false,
-  "agreements": {},
-  "includeAnySDK": false
+  "agreements": {}
 }

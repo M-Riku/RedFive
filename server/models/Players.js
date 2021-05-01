@@ -1,7 +1,7 @@
 players = [
     "lulu",
     "bixin",
-    "yuanyuan",
+    "yuan",
     "wang",
     "anjie"
 ];

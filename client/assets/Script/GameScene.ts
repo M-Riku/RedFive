@@ -46,9 +46,7 @@ export default class GameScene extends cc.Component {
 
     private m_gameCtrl: GameCtrl = null;
 
-    public curPlayer: string = null;
-
-    public otherPlayer: string[] = [];
+    private curPlayer: string = null;
 
     start() {
         this.startGameBtn.node.on('click', this.StartGame.bind(this));
@@ -67,9 +65,9 @@ export default class GameScene extends cc.Component {
     private StartGame() {
         this.curPlayer = this.playerIdEditBox.string;
         this.curPlayerLable.string = this.curPlayer;
-        this.showOtherPlayersName()
-        this.m_gameCtrl.Init(this.pokerContainer, this.pokerPrefab, this.setHolePokersBtn,
-            this.playPokersBtn, this.regretPokersBtn, this.curPlayer);
+        this.m_gameCtrl.Init(this.pokerContainer, this.pokerPrefab,
+            this.playPokersBtn, this.regretPokersBtn, this.setHolePokersBtn,
+            this.curPlayerLable, this.otherPlayerLable, this.curPlayer);
 
         GameNet.getInstance().init(this.PlayGame, this);
 
@@ -78,18 +76,6 @@ export default class GameScene extends cc.Component {
 
         this.playPokersBtn.node.active = true;
         this.regretPokersBtn.node.active = true;
-    }
-
-    private showOtherPlayersName() {
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", `/game/list-other-players/${this.curPlayer}`, true);
-        xhr.onload = () => {
-            this.otherPlayer = JSON.parse(xhr.responseText);
-            this.otherPlayer.forEach((player, index) => {
-                this.otherPlayerLable[index].string = player;
-            })
-        };
-        xhr.send();
     }
 
     private PlayGame(data: string) {
@@ -101,6 +87,6 @@ export default class GameScene extends cc.Component {
         let otherPlayedPokers = playerPokers.filter(
             playerPoker => playerPoker.playerId !== this.curPlayer && playerPoker.playerId !== "庄家"
         );
-        this.m_gameCtrl.ShowUIPoker(myPokers, myPlayedPokers, otherPlayedPokers, this.otherPlayer);
+        this.m_gameCtrl.ShowUIPoker(myPokers, myPlayedPokers, otherPlayedPokers);
     }
 }

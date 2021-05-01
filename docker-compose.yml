@@ -32,7 +32,7 @@ services:
             - ./server:/app
         restart: always
         command:
-            [npm, start]
+            bash -c 'npm install && npm run deploy'
 
     reverse-proxy:
         image: nginx:stable-alpine

@@ -1,11 +1,12 @@
 {
-  "name": "nodejs_test",
+  "name": "red_five",
   "version": "1.0.0",
-  "description": "",
+  "description": "package for red five game",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "deploy": "node app.js"
   },
   "author": "reus",
   "license": "ISC",

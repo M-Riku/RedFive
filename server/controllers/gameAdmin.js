@@ -1,6 +1,29 @@
 const Poker = require('../models/Poker');
 const ESuit = require('../models/ESuit');
+const auth = require('../middleware/auth');
 
+
+exports.PlayerLogin = (req, res, next) => {
+    curPlayerId = req.params.playerId;
+    if (!auth.validatPlayerId(curPlayerId)) {
+        return res.status(401).send('请输入5位以下全英文的用户名');
+    }
+    if (req.players.find(player => player === curPlayerId)) {
+        return res.status(200).send();
+    }
+    if (req.players.length < 5) {
+        req.players.push(curPlayerId);
+        req.playerPokers.push({ playerId: curPlayerId, pokers: [], playedPokers: [] })
+        if (req.players.length === 5) {
+            req.players.push("庄家");
+            req.playerPokers.push({ playerId: "庄家", pokers: [], playedPokers: [] })
+        }
+        req.sendFlag.push(1);
+        res.status(200).send();
+    } else {
+        res.status(401).send('玩家人数已满, 无法添加新玩家');
+    }
+}
 
 exports.listOtherPlayer = (req, res, next) => {
     otherPlayers = [];
@@ -19,11 +42,13 @@ exports.listOtherPlayer = (req, res, next) => {
 }
 
 exports.createGame = (req, res, next) => {
-    console.log('create game');
-    curMainPoint = Number(req.params.mainPoint);
-    pokers = shufflePokers(3, curMainPoint);
-    playerPokers = dealPokersRedFive(req.players, pokers);
-    req.sendFlag.push(1);
+    if (req.players.length >= 5) {
+        console.log('create game');
+        curMainPoint = Number(req.params.mainPoint);
+        pokers = shufflePokers(3, curMainPoint);
+        playerPokers = dealPokersRedFive(req.players, pokers);
+        req.sendFlag.push(1);
+    }
     res.send();
 };
 
@@ -32,6 +57,7 @@ exports.setMain = (req, res, next) => {
     curMainSuit = Number(req.params.mainSuit);
     req.playerPokers.forEach(playerPoker => {
         playerPoker.pokers.forEach(poker => {
+            initPokerMain(poker);
             setPokerMain(poker, null, curMainSuit);
         })
     })
@@ -71,10 +97,12 @@ exports.getHolePokers = (req, res, next) => {
     let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
     let holePokers = req.playerPokers.find(playerPoker => playerPoker.playerId === "庄家").pokers;
     let length = holePokers.length;
-    for (i = 0; i < length; i++) {
-        playerPoker.pokers.push(holePokers.pop());
+    if (length > 0) {
+        for (i = 0; i < length; i++) {
+            playerPoker.pokers.push(holePokers.pop());
+        }
+        req.sendFlag.push(1);
     }
-    req.sendFlag.push(1);
     res.send();
 }
 
@@ -130,6 +158,20 @@ dealPokersRedFive = (players, pokers) => {
         playerPokers.push(playerPoker);
     })
     return playerPokers
+}
+
+initPokerMain = (poker) => {
+    poker.mainSuit = poker.suit;
+    if (poker.mainPoint === 70 || poker.mainPoint === 71) {
+        poker.mainPoint = 70;
+        poker.mainSuit = ESuit.Joker;
+    }
+    if (poker.mainPoint === 80 || poker.mainPoint === 81) {
+        poker.mainPoint = 3;
+    }
+    if (poker.mainPoint === 100) {
+        poker.mainSuit = ESuit.Joker;
+    }
 }
 
 setPokerMain = (poker, curMainPoint, curMainSuit) => {

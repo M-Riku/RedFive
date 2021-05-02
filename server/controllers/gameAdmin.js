@@ -32,6 +32,7 @@ exports.setMain = (req, res, next) => {
     curMainSuit = Number(req.params.mainSuit);
     req.playerPokers.forEach(playerPoker => {
         playerPoker.pokers.forEach(poker => {
+            initPokerMain(poker);
             setPokerMain(poker, null, curMainSuit);
         })
     })
@@ -130,6 +131,20 @@ dealPokersRedFive = (players, pokers) => {
         playerPokers.push(playerPoker);
     })
     return playerPokers
+}
+
+initPokerMain = (poker) => {
+    poker.mainSuit = poker.suit;
+    if (poker.mainPoint === 70 || poker.mainPoint === 71) {
+        poker.mainPoint = 70;
+        poker.mainSuit = ESuit.Joker;
+    }
+    if (poker.mainPoint === 80 || poker.mainPoint === 81) {
+        poker.mainPoint = 3;
+    }
+    if (poker.mainPoint === 100) {
+        poker.mainSuit = ESuit.Joker;
+    }
 }
 
 setPokerMain = (poker, curMainPoint, curMainSuit) => {

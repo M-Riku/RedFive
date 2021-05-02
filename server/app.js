@@ -12,7 +12,10 @@ const wss = new WebSocketServer({ server: server, path: "/wsgame" });
 
 sendFlag = [];
 players = require('./models/Players');
-playerPokers = [{ playerId: '', pokers: [], playedPokers: [] }];
+playerPokers = [];
+players.forEach(player => {
+    playerPokers.push({ playerId: player, pokers: [], playedPokers: [] })
+});
 const handlerPokers = (req, res, next) => {
     req.players = players;
     req.sendFlag = sendFlag;

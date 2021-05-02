@@ -1,4 +1,3 @@
-import GameNet from "./GameNet";
 import GameCtrl from "./GameCtrl";
 
 const { ccclass, property } = cc._decorator;
@@ -17,6 +16,9 @@ export default class GameScene extends cc.Component {
 
     @property(cc.Button)
     startGameBtn: cc.Button = null;
+
+    @property(cc.Label)
+    notificationLable: cc.Label = null;
 
     @property(cc.Button)
     playPokersBtn: cc.Button = null;
@@ -46,10 +48,7 @@ export default class GameScene extends cc.Component {
 
     private m_gameCtrl: GameCtrl = null;
 
-    private curPlayer: string = null;
-
     start() {
-        this.startGameBtn.node.on('click', this.StartGame.bind(this));
         this.playPokersBtn.node.active = false;
         this.regretPokersBtn.node.active = false;
         this.setHolePokersBtn.node.active = false;
@@ -60,38 +59,19 @@ export default class GameScene extends cc.Component {
         this.otherPlayerLable.push(this.playerIdNext4Lable);
 
         this.m_gameCtrl = new GameCtrl();
-    }
 
-    private StartGame() {
-        this.curPlayer = this.playerIdEditBox.string;
-        this.curPlayerLable.string = this.curPlayer;
-        this.m_gameCtrl.Init(this.pokerContainer, this.pokerPrefab,
-            this.playPokersBtn, this.regretPokersBtn, this.setHolePokersBtn,
-            this.curPlayerLable, this.otherPlayerLable, this.curPlayer);
-
-        GameNet.getInstance().init(this.PlayGame, this);
-
-        this.playerIdEditBox.node.active = false;
-        this.startGameBtn.node.active = false;
-
-        this.playPokersBtn.node.active = true;
-        this.regretPokersBtn.node.active = true;
-    }
-
-    private PlayGame(data: string) {
-        let playerPokers = JSON.parse(data);
-        let myPlayer = playerPokers.find(
-            playerPoker => playerPoker.playerId === this.curPlayer
+        this.m_gameCtrl.Init(
+            this.pokerContainer,
+            this.pokerPrefab,
+            this.playerIdEditBox,
+            this.startGameBtn,
+            this.notificationLable,
+            this.playPokersBtn,
+            this.regretPokersBtn,
+            this.setHolePokersBtn,
+            this.curPlayerLable,
+            this.otherPlayerLable
         );
-        let myPokers = []
-        let myPlayedPokers = []
-        if (myPlayer) {
-            myPokers = myPlayer.pokers;
-            myPlayedPokers = myPlayer.playedPokers;
-        }
-        let otherPlayedPokers = playerPokers.filter(
-            playerPoker => playerPoker.playerId !== this.curPlayer && playerPoker.playerId !== "庄家"
-        );
-        this.m_gameCtrl.ShowUIPoker(myPokers, myPlayedPokers, otherPlayedPokers);
+
     }
 }

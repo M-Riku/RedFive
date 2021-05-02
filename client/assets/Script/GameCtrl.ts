@@ -14,6 +14,8 @@ export default class GameCtrl {
 
     private startGameBtn: cc.Button = null;
 
+    private notificationLable: cc.Label = null;
+
     private playPokersBtn: cc.Button = null;
 
     private regretPokersBtn: cc.Button = null;
@@ -35,6 +37,7 @@ export default class GameCtrl {
         pokerPrefab: cc.Prefab,
         playerIdEditBox: cc.EditBox,
         startGameBtn: cc.Button,
+        notificationLable: cc.Label,
         playPokersBtn: cc.Button,
         regretPokersBtn: cc.Button,
         setHolePokersBtn: cc.Button,
@@ -45,6 +48,7 @@ export default class GameCtrl {
         this.pokerPrefab = pokerPrefab;
         this.playerIdEditBox = playerIdEditBox;
         this.startGameBtn = startGameBtn;
+        this.notificationLable = notificationLable;
         this.playPokersBtn = playPokersBtn;
         this.regretPokersBtn = regretPokersBtn;
         this.setHolePokersBtn = setHolePokersBtn;
@@ -75,22 +79,27 @@ export default class GameCtrl {
     }
 
     private OnStartGameBtnClick() {
-        this.curPlayer = this.playerIdEditBox.string;
-        console.log(`${this.curPlayer} log in`);
-        this.curPlayerLable.string = this.curPlayer;
-
         let xhr = new XMLHttpRequest();
-        xhr.open("Get", `http://localhost:3000/game/player-login/${this.curPlayer}`, false);
+        xhr.open("Post", `http://localhost:3000/game/player-login/${this.playerIdEditBox.string}`, true);
         xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                this.curPlayer = this.playerIdEditBox.string;
+                this.curPlayerLable.string = this.curPlayer;
+                GameNet.getInstance().init(this.PlayGame, this);
+
+                this.notificationLable.string = "";
+
+                this.playerIdEditBox.node.active = false;
+                this.startGameBtn.node.active = false;
+
+                this.playPokersBtn.node.active = true;
+                this.regretPokersBtn.node.active = true;
+            } else {
+                this.notificationLable.string = xhr.response;
+            }
+        };
         xhr.send();
-
-        GameNet.getInstance().init(this.PlayGame, this);
-
-        this.playerIdEditBox.node.active = false;
-        this.startGameBtn.node.active = false;
-
-        this.playPokersBtn.node.active = true;
-        this.regretPokersBtn.node.active = true;
     }
 
     private OnPlayPokersBtnClick() {

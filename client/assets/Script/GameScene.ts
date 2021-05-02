@@ -17,6 +17,9 @@ export default class GameScene extends cc.Component {
     @property(cc.Button)
     startGameBtn: cc.Button = null;
 
+    @property(cc.Label)
+    notificationLable: cc.Label = null;
+
     @property(cc.Button)
     playPokersBtn: cc.Button = null;
 
@@ -62,6 +65,7 @@ export default class GameScene extends cc.Component {
             this.pokerPrefab,
             this.playerIdEditBox,
             this.startGameBtn,
+            this.notificationLable,
             this.playPokersBtn,
             this.regretPokersBtn,
             this.setHolePokersBtn,

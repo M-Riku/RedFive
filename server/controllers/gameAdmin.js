@@ -1,22 +1,28 @@
 const Poker = require('../models/Poker');
 const ESuit = require('../models/ESuit');
-const auth = require('./auth')
+const auth = require('../middleware/auth');
 
 
 exports.PlayerLogin = (req, res, next) => {
     curPlayerId = req.params.playerId;
-    if (req.players.length < 5 && auth.validatPlayerId(curPlayerId)) {
-        if (!req.players.find(player => player === curPlayerId)) {
-            req.players.push(curPlayerId);
-            req.playerPokers.push({ playerId: curPlayerId, pokers: [], playedPokers: [] })
-            if (req.players.length === 5) {
-                req.players.push("庄家");
-                req.playerPokers.push({ playerId: "庄家", pokers: [], playedPokers: [] })
-            }
-            req.sendFlag.push(1);
-        }
+    if (!auth.validatPlayerId(curPlayerId)) {
+        return res.status(401).send('请输入5位以下全英文的用户名');
     }
-    res.send();
+    if (req.players.find(player => player === curPlayerId)) {
+        return res.status(200).send();
+    }
+    if (req.players.length < 5) {
+        req.players.push(curPlayerId);
+        req.playerPokers.push({ playerId: curPlayerId, pokers: [], playedPokers: [] })
+        if (req.players.length === 5) {
+            req.players.push("庄家");
+            req.playerPokers.push({ playerId: "庄家", pokers: [], playedPokers: [] })
+        }
+        req.sendFlag.push(1);
+        res.status(200).send();
+    } else {
+        res.status(401).send('玩家人数已满, 无法添加新玩家');
+    }
 }
 
 exports.listOtherPlayer = (req, res, next) => {

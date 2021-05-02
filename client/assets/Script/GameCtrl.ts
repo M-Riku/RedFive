@@ -1,3 +1,4 @@
+import GameNet from "./GameNet";
 import PlayerPostion from "./PlayerPostion";
 import Poker from "./Poker";
 import UIPoker from "./UIPoker";
@@ -5,9 +6,13 @@ import UIPoker from "./UIPoker";
 
 export default class GameCtrl {
 
+    private pokerContainer: cc.Node = null;
+
     private pokerPrefab: cc.Prefab = null;
 
-    private pokerContainer: cc.Node = null;
+    private playerIdEditBox: cc.EditBox = null;
+
+    private startGameBtn: cc.Button = null;
 
     private playPokersBtn: cc.Button = null;
 
@@ -25,21 +30,67 @@ export default class GameCtrl {
 
     private playPokers: { pokers: Poker[] } = { pokers: [] };
 
-    public Init(pockerContainer: cc.Node, pokerPrefab: cc.Prefab,
-        playPokersBtn: cc.Button, regretPokersBtn: cc.Button, setHolePokersBtn: cc.Button,
-        curPlayerLable: cc.Label, otherPlayerLable: cc.Label[], curPlayer: string) {
+    public Init(
+        pockerContainer: cc.Node,
+        pokerPrefab: cc.Prefab,
+        playerIdEditBox: cc.EditBox,
+        startGameBtn: cc.Button,
+        playPokersBtn: cc.Button,
+        regretPokersBtn: cc.Button,
+        setHolePokersBtn: cc.Button,
+        curPlayerLable: cc.Label,
+        otherPlayerLable: cc.Label[]
+    ) {
         this.pokerContainer = pockerContainer;
         this.pokerPrefab = pokerPrefab;
+        this.playerIdEditBox = playerIdEditBox;
+        this.startGameBtn = startGameBtn;
         this.playPokersBtn = playPokersBtn;
         this.regretPokersBtn = regretPokersBtn;
         this.setHolePokersBtn = setHolePokersBtn;
         this.curPlayerLable = curPlayerLable;
         this.otherPlayerLable = otherPlayerLable;
-        this.curPlayer = curPlayer;
+        this.startGameBtn.node.on("click", this.OnStartGameBtnClick.bind(this));
         this.playPokersBtn.node.on('click', this.OnPlayPokersBtnClick.bind(this));
         this.regretPokersBtn.node.on('click', this.OnRegretPokersBtnClick.bind(this));
         this.setHolePokersBtn.node.on('click', this.OnSetHolePokersBtnClick.bind(this));
+    }
+
+    private PlayGame(data: string) {
         this.getOtherPlayersName();
+        let playerPokers = JSON.parse(data);
+        let myPlayer = playerPokers.find(
+            playerPoker => playerPoker.playerId === this.curPlayer
+        );
+        let myPokers = []
+        let myPlayedPokers = []
+        if (myPlayer) {
+            myPokers = myPlayer.pokers;
+            myPlayedPokers = myPlayer.playedPokers;
+        }
+        let otherPlayedPokers = playerPokers.filter(
+            playerPoker => playerPoker.playerId !== this.curPlayer && playerPoker.playerId !== "庄家"
+        );
+        this.ShowUIPoker(myPokers, myPlayedPokers, otherPlayedPokers);
+    }
+
+    private OnStartGameBtnClick() {
+        this.curPlayer = this.playerIdEditBox.string;
+        console.log(`${this.curPlayer} log in`);
+        this.curPlayerLable.string = this.curPlayer;
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("Get", `http://localhost:3000/game/player-login/${this.curPlayer}`, false);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send();
+
+        GameNet.getInstance().init(this.PlayGame, this);
+
+        this.playerIdEditBox.node.active = false;
+        this.startGameBtn.node.active = false;
+
+        this.playPokersBtn.node.active = true;
+        this.regretPokersBtn.node.active = true;
     }
 
     private OnPlayPokersBtnClick() {
@@ -87,7 +138,7 @@ export default class GameCtrl {
         return uiPoker
     }
 
-    public ShowUIPoker(curPokers: any, myPlayedPokers: any, otherPlayerPokers: any) {
+    private ShowUIPoker(curPokers: any, myPlayedPokers: any, otherPlayerPokers: any) {
         if (curPokers.length > 31) {
             this.setHolePokersBtn.node.active = true;
         } else {

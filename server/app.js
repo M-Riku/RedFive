@@ -14,11 +14,8 @@ const server = app.listen(3000);
 const wss = new ws.Server({ server: server, path: "/wsgame" });
 
 sendFlag = [];
-players = require('./models/Players');
+players = [];
 playerPokers = [];
-players.forEach(player => {
-    playerPokers.push({ playerId: player, pokers: [], playedPokers: [] })
-});
 const handlerPokers = (req, res, next) => {
     req.players = players;
     req.sendFlag = sendFlag;

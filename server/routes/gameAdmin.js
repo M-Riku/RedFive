@@ -4,6 +4,8 @@ const gameAdminController = require('../controllers/gameAdmin');
 
 const router = express.Router();
 
+router.use('/player-login/:playerId', gameAdminController.PlayerLogin);
+
 router.get('/list-other-players/:playerId', gameAdminController.listOtherPlayer);
 
 router.use('/create-game/:mainPoint', gameAdminController.createGame);

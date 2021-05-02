@@ -1,6 +1,23 @@
 const Poker = require('../models/Poker');
 const ESuit = require('../models/ESuit');
+const auth = require('./auth')
 
+
+exports.PlayerLogin = (req, res, next) => {
+    curPlayerId = req.params.playerId;
+    if (req.players.length < 5 && auth.validatPlayerId(curPlayerId)) {
+        if (!req.players.find(player => player === curPlayerId)) {
+            req.players.push(curPlayerId);
+            req.playerPokers.push({ playerId: curPlayerId, pokers: [], playedPokers: [] })
+            if (req.players.length === 5) {
+                req.players.push("庄家");
+                req.playerPokers.push({ playerId: "庄家", pokers: [], playedPokers: [] })
+            }
+            req.sendFlag.push(1);
+        }
+    }
+    res.send();
+}
 
 exports.listOtherPlayer = (req, res, next) => {
     otherPlayers = [];
@@ -19,11 +36,13 @@ exports.listOtherPlayer = (req, res, next) => {
 }
 
 exports.createGame = (req, res, next) => {
-    console.log('create game');
-    curMainPoint = Number(req.params.mainPoint);
-    pokers = shufflePokers(3, curMainPoint);
-    playerPokers = dealPokersRedFive(req.players, pokers);
-    req.sendFlag.push(1);
+    if (req.players.length >= 5) {
+        console.log('create game');
+        curMainPoint = Number(req.params.mainPoint);
+        pokers = shufflePokers(3, curMainPoint);
+        playerPokers = dealPokersRedFive(req.players, pokers);
+        req.sendFlag.push(1);
+    }
     res.send();
 };
 
@@ -72,10 +91,12 @@ exports.getHolePokers = (req, res, next) => {
     let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
     let holePokers = req.playerPokers.find(playerPoker => playerPoker.playerId === "庄家").pokers;
     let length = holePokers.length;
-    for (i = 0; i < length; i++) {
-        playerPoker.pokers.push(holePokers.pop());
+    if (length > 0) {
+        for (i = 0; i < length; i++) {
+            playerPoker.pokers.push(holePokers.pop());
+        }
+        req.sendFlag.push(1);
     }
-    req.sendFlag.push(1);
     res.send();
 }
 

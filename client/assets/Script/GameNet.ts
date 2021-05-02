@@ -13,7 +13,7 @@ export default class GameNet {
 
     public init(callback: Function, target: any) {
         if (this.ws != null) return;
-        this.ws = new WebSocket("ws://34.96.210.7/wsgame");
+        this.ws = new WebSocket("ws://35.213.122.214/wsgame");
         this.ws.onopen = (event: Event) => {
             console.log('success to connect to websocket server!');
         }

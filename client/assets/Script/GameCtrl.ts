@@ -80,7 +80,7 @@ export default class GameCtrl {
 
     private OnStartGameBtnClick() {
         let xhr = new XMLHttpRequest();
-        xhr.open("Post", `http://localhost:3000/game/player-login/${this.playerIdEditBox.string}`, true);
+        xhr.open("Post", `/game/player-login/${this.playerIdEditBox.string}`, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onload = () => {
             if (xhr.status === 200) {

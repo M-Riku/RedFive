@@ -80,10 +80,15 @@ export default class GameScene extends cc.Component {
 
     private PlayGame(data: string) {
         let playerPokers = JSON.parse(data);
-        let myPokers = playerPokers.find(playerPoker => playerPoker.playerId === this.curPlayer).pokers;
-        let myPlayedPokers = playerPokers.find(
+        let myPlayer = playerPokers.find(
             playerPoker => playerPoker.playerId === this.curPlayer
-        ).playedPokers;
+        );
+        let myPokers = []
+        let myPlayedPokers = []
+        if (myPlayer) {
+            myPokers = myPlayer.pokers;
+            myPlayedPokers = myPlayer.playedPokers;
+        }
         let otherPlayedPokers = playerPokers.filter(
             playerPoker => playerPoker.playerId !== this.curPlayer && playerPoker.playerId !== "庄家"
         );

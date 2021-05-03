@@ -3064,9 +3064,7 @@
     "startGameBtn": {
       "__id__": 59
     },
-    "notificationLable": {
-      "__id__": 61
-    },
+    "notificationLable": null,
     "playPokersBtn": {
       "__id__": 27
     },

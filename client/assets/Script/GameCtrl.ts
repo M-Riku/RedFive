@@ -86,7 +86,7 @@ export default class GameCtrl {
             if (xhr.status === 200) {
                 this.curPlayer = this.playerIdEditBox.string;
                 this.curPlayerLable.string = this.curPlayer;
-                GameNet.getInstance().init(this.PlayGame, this);
+                GameNet.getInstance().createWebSocket(this.PlayGame, this);
 
                 this.notificationLable.string = "";
 

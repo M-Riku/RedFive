@@ -94,14 +94,16 @@ exports.regretCards = (req, res, next) => {
 
 exports.getHolePokers = (req, res, next) => {
     playerId = req.params.playerId;
-    let playerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
+    let bankerPoker = req.playerPokers.find(playerPoker => playerPoker.playerId === playerId);
     let holePokers = req.playerPokers.find(playerPoker => playerPoker.playerId === "庄家").pokers;
     let length = holePokers.length;
-    if (length > 0) {
-        for (i = 0; i < length; i++) {
-            playerPoker.pokers.push(holePokers.pop());
+    if (bankerPoker) {
+        if (length > 0) {
+            for (i = 0; i < length; i++) {
+                bankerPoker.pokers.push(holePokers.pop());
+            }
+            req.sendFlag.push(1);
         }
-        req.sendFlag.push(1);
     }
     res.send();
 }
@@ -129,14 +131,14 @@ shufflePokers = (deckNumber, curMainPoint) => {
                 poker = new Poker(pokerId, point, suit);
                 setPokerMain(poker, curMainPoint);
                 pokers.push(poker);
-                pokerId++
+                pokerId++;
             }
         }
 
         pokers.push(new Poker(pokerId, 91, 4));
-        pokerId++
+        pokerId++;
         pokers.push(new Poker(pokerId, 92, 4));
-        pokerId++
+        pokerId++;
     }
 
     for (i = pokers.length - 1; i > 0; i--) {
@@ -154,7 +156,11 @@ dealPokersRedFive = (players, pokers) => {
         playerPoker = {};
         playerPoker.playerId = player;
         playerPoker.playedPokers = [];
-        playerPoker.pokers = pokers.slice(index * 31, (index + 1) * 31);
+        if (player === '庄家') {
+            playerPoker.pokers = pokers.slice(-7,);
+        } else {
+            playerPoker.pokers = pokers.filter((_, i) => i % 5 === index && i < pokers.length - 7);
+        }
         playerPokers.push(playerPoker);
     })
     return playerPokers

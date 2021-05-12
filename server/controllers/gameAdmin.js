@@ -1,28 +1,45 @@
-const Poker = require('../models/Poker');
 const ESuit = require('../models/ESuit');
 const auth = require('../middleware/auth');
+const Room = require('../models/room');
+const Poker = require('../models/poker');
+const Player = require('../models/player');
 
-
-exports.PlayerLogin = (req, res, next) => {
-    curPlayerId = req.params.playerId;
+exports.playerLogin = (req, res, next) => {
+    const curPlayerId = req.body.player.playerId;
     if (!auth.validatPlayerId(curPlayerId)) {
         return res.status(401).send('请输入5位以下全英文的用户名');
     }
-    if (req.players.find(player => player === curPlayerId)) {
-        return res.status(200).send();
-    }
-    if (req.players.length < 5) {
-        req.players.push(curPlayerId);
-        req.playerPokers.push({ playerId: curPlayerId, pokers: [], playedPokers: [] })
-        if (req.players.length === 5) {
-            req.players.push("庄家");
-            req.playerPokers.push({ playerId: "庄家", pokers: [], playedPokers: [] })
-        }
-        req.sendFlag.push(1);
-        res.status(200).send();
-    } else {
-        res.status(401).send('玩家人数已满, 无法添加新玩家');
-    }
+    Player.findOne({ playerId: curPlayerId })
+        .then(player => {
+            if (!player) {
+                player = new Player({ playerId: curPlayerId })
+                player.save()
+            }
+        });
+    res.status(200).send();
+};
+
+exports.createRoom = (req, res, next) => {
+    console.log('create room');
+    const curPlayerId = req.body.player.playerId;
+    room = new Room({ players: [curPlayerId] });
+    room.save()
+        .then(() => {
+            res.status(200).send();
+        })
+};
+
+exports.joinRoom = (req, res, next) => {
+    const curPlayerId = req.body.player.playerId;
+    const curRoomId = req.body.room.roomId;
+    Room.findOne({ roomId: curRoomId })
+        .then(room => {
+            if (room.players.length >= 5) {
+                return res.status(401).send('玩家人数已满, 无法添加新玩家');
+            }
+            room.addPlayer(curPlayerId);
+        });
+    res.status(200).send();
 }
 
 exports.listOtherPlayer = (req, res, next) => {

@@ -4,7 +4,11 @@ const gameAdminController = require('../controllers/gameAdmin');
 
 const router = express.Router();
 
-router.use('/player-login/:playerId', gameAdminController.PlayerLogin);
+router.use('/player-login', gameAdminController.playerLogin);
+
+router.use('/create-room', gameAdminController.createRoom);
+
+router.use('/join-room', gameAdminController.joinRoom);
 
 router.get('/list-other-players/:playerId', gameAdminController.listOtherPlayer);
 

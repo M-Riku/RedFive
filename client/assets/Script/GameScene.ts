@@ -33,31 +33,11 @@ export default class GameScene extends cc.Component {
     curPlayerLable: cc.Label = null;
 
     @property(cc.Label)
-    playerIdNext1Lable: cc.Label = null;
-
-    @property(cc.Label)
-    playerIdNext2Lable: cc.Label = null;
-
-    @property(cc.Label)
-    playerIdNext3Lable: cc.Label = null;
-
-    @property(cc.Label)
-    playerIdNext4Lable: cc.Label = null;
-
-    private otherPlayerLable: cc.Label[] = [];
+    otherPlayerLable: cc.Label[] = []
 
     private m_gameCtrl: GameCtrl = null;
 
     start() {
-        this.playPokersBtn.node.active = false;
-        this.regretPokersBtn.node.active = false;
-        this.setHolePokersBtn.node.active = false;
-
-        this.otherPlayerLable.push(this.playerIdNext1Lable);
-        this.otherPlayerLable.push(this.playerIdNext2Lable);
-        this.otherPlayerLable.push(this.playerIdNext3Lable);
-        this.otherPlayerLable.push(this.playerIdNext4Lable);
-
         this.m_gameCtrl = new GameCtrl();
 
         this.m_gameCtrl.Init(

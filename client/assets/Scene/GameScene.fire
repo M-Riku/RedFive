@@ -295,7 +295,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "playerIdNext1",
+    "_name": "otherPlayer1",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -420,7 +420,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "playerIdNext2",
+    "_name": "otherPlayer2",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -545,7 +545,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "playerIdNext3",
+    "_name": "otherPlayer3",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -670,7 +670,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "playerIdNext4",
+    "_name": "otherPlayer4",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -1694,7 +1694,7 @@
   {
     "__type__": "cc.Node",
     "_name": "SetHolePokersBtn",
-    "_objFlags": 0,
+    "_objFlags": 512,
     "_parent": {
       "__id__": 2
     },
@@ -2908,7 +2908,7 @@
   {
     "__type__": "cc.Node",
     "_name": "Notification",
-    "_objFlags": 0,
+    "_objFlags": 512,
     "_parent": {
       "__id__": 2
     },
@@ -3079,18 +3079,20 @@
     "curPlayerLable": {
       "__id__": 4
     },
-    "playerIdNext1Lable": {
-      "__id__": 7
-    },
-    "playerIdNext2Lable": {
-      "__id__": 10
-    },
-    "playerIdNext3Lable": {
-      "__id__": 13
-    },
-    "playerIdNext4Lable": {
-      "__id__": 16
-    },
+    "otherPlayerLable": [
+      {
+        "__id__": 7
+      },
+      {
+        "__id__": 10
+      },
+      {
+        "__id__": 13
+      },
+      {
+        "__id__": 16
+      }
+    ],
     "_id": "0dPyFW8mVE6K8K3GWAwbBA"
   }
 ]

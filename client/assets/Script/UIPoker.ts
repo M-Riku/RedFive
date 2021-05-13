@@ -1,5 +1,5 @@
-import { ESuit } from "./ConfigEnum";
-import Poker from "./Poker";
+import { ESuit } from "../Models/Esuit";
+import Poker from "../Models/Poker";
 
 const POINT_MAP = {
     1: 'A',
@@ -28,7 +28,6 @@ export default class UIPoker extends cc.Component {
     @property(cc.Sprite) smallSuitSprite: cc.Sprite = null;
     @property(cc.Label) pointLabel: cc.Label = null;
 
-    // resources
     @property(cc.SpriteFrame) texFrontBG: cc.SpriteFrame = null;
     @property(cc.SpriteFrame) texBackBG: cc.SpriteFrame = null;
     @property(cc.SpriteFrame) bigSuits: cc.SpriteFrame[] = [];

@@ -1,7 +1,8 @@
 import GameNet from "./GameNet";
-import PlayerPostion from "./PlayerPostion";
-import Poker from "./Poker";
+import PlayerPostion from "../Models/PlayerPostion";
+import Poker from "../Models/Poker";
 import UIPoker from "./UIPoker";
+import { player, room } from '../Models/Common';
 
 
 export default class GameCtrl {
@@ -54,10 +55,17 @@ export default class GameCtrl {
         this.setHolePokersBtn = setHolePokersBtn;
         this.curPlayerLable = curPlayerLable;
         this.otherPlayerLable = otherPlayerLable;
+
+        this.playPokersBtn.node.active = false;
+        this.regretPokersBtn.node.active = false;
+        this.setHolePokersBtn.node.active = false;
+
         this.startGameBtn.node.on("click", this.OnStartGameBtnClick.bind(this));
         this.playPokersBtn.node.on('click', this.OnPlayPokersBtnClick.bind(this));
         this.regretPokersBtn.node.on('click', this.OnRegretPokersBtnClick.bind(this));
         this.setHolePokersBtn.node.on('click', this.OnSetHolePokersBtnClick.bind(this));
+        
+        // GameNet.getInstance().createWebSocket(this.PlayGame, this);
     }
 
     private PlayGame(data: string) {
@@ -80,7 +88,8 @@ export default class GameCtrl {
 
     private OnStartGameBtnClick() {
         let xhr = new XMLHttpRequest();
-        xhr.open("Post", `http://localhost:3000/game/player-login/${this.playerIdEditBox.string}`, true);
+        let data = JSON.stringify({ player: { playerId: this.playerIdEditBox.string } });
+        xhr.open("Post", `http://localhost:3000/game/player-login`, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onload = () => {
             if (xhr.status === 200) {
@@ -99,7 +108,7 @@ export default class GameCtrl {
                 this.notificationLable.string = xhr.response;
             }
         };
-        xhr.send();
+        xhr.send(data);
     }
 
     private OnPlayPokersBtnClick() {

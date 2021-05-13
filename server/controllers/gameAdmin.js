@@ -1,45 +1,42 @@
 const ESuit = require('../models/ESuit');
-const auth = require('../middleware/auth');
+const Auth = require('../middleware/auth');
 const Room = require('../models/room');
 const Poker = require('../models/poker');
 const Player = require('../models/player');
 
 exports.playerLogin = (req, res, next) => {
     const curPlayerId = req.body.player.playerId;
-    if (!auth.validatPlayerId(curPlayerId)) {
+    if (!Auth.validatPlayerId(curPlayerId)) {
         return res.status(401).send('请输入5位以下全英文的用户名');
     }
+    console.log(curPlayerId);
     Player.findOne({ playerId: curPlayerId })
         .then(player => {
             if (!player) {
                 player = new Player({ playerId: curPlayerId })
                 player.save()
             }
-        });
-    res.status(200).send();
-};
-
-exports.createRoom = (req, res, next) => {
-    console.log('create room');
-    const curPlayerId = req.body.player.playerId;
-    room = new Room({ players: [curPlayerId] });
-    room.save()
-        .then(() => {
             res.status(200).send();
-        })
+        });
 };
 
 exports.joinRoom = (req, res, next) => {
     const curPlayerId = req.body.player.playerId;
     const curRoomId = req.body.room.roomId;
+    let resStatus = 200;
+    let resData = "";
     Room.findOne({ roomId: curRoomId })
         .then(room => {
-            if (room.players.length >= 5) {
-                return res.status(401).send('玩家人数已满, 无法添加新玩家');
+            if (!room) {
+                room = new Room({ roomId: curRoomId });
             }
-            room.addPlayer(curPlayerId);
+            if (room.addPlayer(curPlayerId) === false) {
+                resStatus = 401;
+                resData = "房间已满, 无法进入"
+            }
+            res.status(resStatus).send(resData);
+            room.save();
         });
-    res.status(200).send();
 }
 
 exports.listOtherPlayer = (req, res, next) => {

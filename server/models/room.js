@@ -22,10 +22,12 @@ roomSchema.methods.addPlayer = function (playerId) {
     const roomPlayerIndex = this.players.findIndex(id => id === playerId);
 
     if (roomPlayerIndex < 0) {
+        if (this.players.length >= 5) {
+            return false;
+        }
         this.players.push(playerId);
     }
-
-    this.save()
+    return true;
 }
 
 module.exports = mongoose.model('Room', roomSchema);

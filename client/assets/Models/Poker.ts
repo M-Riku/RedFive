@@ -1,4 +1,4 @@
-import { ESuit } from "./ConfigEnum";
+import { ESuit } from "./Esuit";
 
 export default class Poker {
     public pokerId: number = null
